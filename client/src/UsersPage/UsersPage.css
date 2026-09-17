@@ -1,0 +1,187 @@
+.users-page-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 32px 60px;
+  color: var(--color-body);
+  font-family: var(--font-body);
+}
+
+.users-page-container .dashboard-header {
+  margin-bottom: 32px;
+}
+
+.users-page-container .dashboard-header h1 {
+  margin: 0;
+  color: var(--color-headline);
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.users-page-container .panel-rule {
+  display: block;
+  width: 48px;
+  height: 2px;
+  background-color: var(--color-accent);
+  margin: 14px 0 24px;
+}
+
+.users-page-container .summary-stats {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.users-page-container .stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.users-page-container .stat-label {
+  font-size: 0.8rem;
+  color: var(--color-body);
+}
+
+.users-page-container .stat-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-headline);
+}
+
+.users-page-container .stat-value.admin {
+  color: var(--color-accent);
+}
+
+.users-page-container .table-container {
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  margin-top: 8px;
+}
+
+.users-page-container table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--color-surface);
+  color: var(--color-body);
+  min-width: 640px;
+}
+
+.users-page-container thead tr {
+  background-color: var(--color-surface-raised);
+}
+
+.users-page-container thead th {
+  padding: 14px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-body);
+  font-size: 0.82rem;
+  letter-spacing: 0.3px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.users-page-container tbody tr {
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color 0.15s ease;
+}
+
+.users-page-container tbody tr:last-child {
+  border-bottom: none;
+}
+
+.users-page-container tbody tr:hover {
+  background-color: var(--color-surface-raised);
+}
+
+.users-page-container tbody td {
+  padding: 14px 12px;
+  font-size: 0.9rem;
+  vertical-align: middle;
+}
+
+.role-indicator {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.role-indicator.admin {
+  color: var(--color-accent);
+}
+
+.role-indicator.manager {
+  color: var(--color-body);
+}
+
+.users-page-container .actions-cell {
+  display: flex;
+  gap: 10px;
+}
+
+.users-page-container .delete-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border: 1px solid var(--color-error);
+  border-radius: 4px;
+  background-color: transparent;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-error);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.users-page-container .delete-btn:hover:not(:disabled) {
+  background-color: rgba(182, 92, 77, 0.12);
+}
+
+.users-page-container .delete-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.error-message {
+  text-align: center;
+  color: var(--color-error);
+  margin: 50px;
+  font-size: 1.1rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 12px;
+  color: var(--color-body);
+  font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+  .users-page-container {
+    padding: 24px 16px 40px;
+  }
+
+  .users-page-container .dashboard-header h1 {
+    font-size: 1.6rem;
+  }
+
+  .users-page-container .summary-stats {
+    gap: 24px;
+  }
+
+  .users-page-container .stat-value {
+    font-size: 1.25rem;
+  }
+
+  .users-page-container thead th {
+    padding: 10px 8px;
+    font-size: 0.75rem;
+  }
+
+  .users-page-container tbody td {
+    padding: 10px 8px;
+    font-size: 0.8rem;
+  }
+}

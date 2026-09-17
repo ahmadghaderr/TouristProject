@@ -1,0 +1,211 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.9rem 2rem;
+  background-color: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  text-decoration: none;
+  color: var(--color-headline);
+  flex-shrink: 0;
+}
+
+.navbar-brand-icon {
+  font-size: 1.3rem;
+  color: var(--color-accent);
+}
+
+.navbar-brand-text {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  color: var(--color-headline);
+}
+
+.navbar-links {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  gap: 2.25rem;
+}
+
+.navbar-link {
+  text-decoration: none;
+  color: var(--color-body);
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 0.4rem 0.1rem;
+  transition: color 0.2s ease;
+}
+
+.navbar-link:hover {
+  color: var(--color-headline);
+}
+
+.navbar-link.is-active {
+  color: var(--color-accent);
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.navbar-logout {
+  background: transparent;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-body);
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.navbar-logout:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.navbar-notify-btn {
+  background: transparent;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-body);
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.navbar-notify-btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.navbar-notify-status {
+  padding: 0.5rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-success);
+  background-color: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+}
+
+.navbar-ios-banner {
+  margin: 0;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: var(--color-body);
+  max-width: 260px;
+}
+
+.navbar-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 22px;
+  height: 16px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.navbar-toggle span {
+  display: block;
+  height: 2px;
+  background-color: var(--color-headline);
+  transition: all 0.3s ease;
+}
+
+.navbar-toggle.is-open span:nth-child(1) {
+  transform: rotate(45deg) translate(4px, 4px);
+}
+.navbar-toggle.is-open span:nth-child(2) {
+  opacity: 0;
+}
+.navbar-toggle.is-open span:nth-child(3) {
+  transform: rotate(-45deg) translate(4px, -4px);
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+  }
+
+  .navbar-toggle {
+    display: flex;
+    order: 2;
+  }
+
+  .navbar-brand {
+    order: 1;
+  }
+
+  .navbar-brand-text {
+    font-size: 1.15rem;
+  }
+
+  .navbar-links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    background-color: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    padding: 0.5rem 0;
+    align-items: center;
+    gap: 0;
+    margin-left: 0;
+  }
+
+  .navbar-links.is-open {
+    display: flex;
+  }
+
+  .navbar-link {
+    width: 100%;
+    text-align: center;
+    padding: 0.9rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .navbar-actions {
+    width: 100%;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    margin-left: 0;
+    order: 3;
+  }
+
+  .navbar-logout {
+    padding: 0.5rem 0.9rem;
+    font-size: 0.85rem;
+  }
+}
