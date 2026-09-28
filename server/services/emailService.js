@@ -1,30 +1,45 @@
-const nodemailer = require('nodemailer');
+const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD,
-  },
-});
+async function sendViaBrevo({ senderName, to, subject, textContent, htmlContent }) {
+  const response = await fetch(BREVO_API_URL, {
+    method: 'POST',
+    headers: {
+      'api-key': process.env.BREVO_API_KEY,
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify({
+      sender: { name: senderName, email: process.env.EMAIL_USER },
+      to: [{ email: to }],
+      subject,
+      htmlContent,
+      textContent,
+    }),
+  });
+
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(`Brevo API request failed (${response.status}): ${body}`);
+  }
+}
 
 async function sendDigestEmail(digestText, digestHtml, dateLabel) {
-  await transporter.sendMail({
-    from: `"Tourist Admin Digest" <${process.env.EMAIL_USER}>`,
+  await sendViaBrevo({
+    senderName: 'Tourist Admin Digest',
     to: process.env.ADMIN_EMAIL,
     subject: `Daily Booking Digest - ${dateLabel}`,
-    text: digestText,
-    html: digestHtml,
+    textContent: digestText,
+    htmlContent: digestHtml,
   });
 }
 
 async function sendVerificationEmail(toEmail, name, verifyLink) {
-  await transporter.sendMail({
-    from: `"Tourist Admin" <${process.env.EMAIL_USER}>`,
+  await sendViaBrevo({
+    senderName: 'Tourist Admin',
     to: toEmail,
     subject: 'Verify your Tourist account',
-    text: `Hi ${name},\n\nClick the link below to verify your account:\n${verifyLink}\n\nThis link expires in 24 hours.`,
-    html: `
+    textContent: `Hi ${name},\n\nClick the link below to verify your account:\n${verifyLink}\n\nThis link expires in 24 hours.`,
+    htmlContent: `
       <div style="font-family: Arial, sans-serif; font-size: 15px; color:#222;">
         <p>Hi ${name},</p>
         <p>Click the button below to verify your account and get access.</p>

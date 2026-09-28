@@ -2,7 +2,7 @@ const { google } = require('googleapis');
 const path = require('path');
 
 const auth = new google.auth.GoogleAuth({
-  keyFile: path.join(__dirname, '..', 'config', 'google-calendar-key.json'),
+  keyFile: process.env.GOOGLE_KEY_FILE || path.join(__dirname, '..', 'config', 'google-calendar-key.json'),
   scopes: ['https://www.googleapis.com/auth/calendar'],
 });
 

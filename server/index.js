@@ -8,12 +8,13 @@ require('./models/pushSubscription');
 const visitRoutes = require("./routes/visitRoutes");
 const userRoutes = require("./routes/userRoutes");
 const pushRoutes = require("./routes/pushRoutes");
+const jobRoutes = require("./routes/jobRoutes");
 const { schedulePreArrivalNotifications } = require("./jobs/preArrivalNotificationJob");
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(process.env.FRONTEND_URL ? cors({ origin: process.env.FRONTEND_URL }) : cors());
 app.use(express.json());
 
 app.get('/api/test', (req, res) => {
@@ -23,6 +24,7 @@ app.get('/api/test', (req, res) => {
 app.use("/api/visit", visitRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/push", pushRoutes);
+app.use("/api/jobs", jobRoutes);
 
 sequelize.authenticate()
   .then(() => sequelize.sync())

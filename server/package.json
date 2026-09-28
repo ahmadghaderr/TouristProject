@@ -20,7 +20,6 @@
     "jsonwebtoken": "^9.0.2",
     "moment-timezone": "^0.6.0",
     "node-cron": "^4.6.0",
-    "nodemailer": "^9.1.0",
     "pg": "^8.23.0",
     "sequelize": "^6.37.8",
     "web-push": "^3.6.7"
