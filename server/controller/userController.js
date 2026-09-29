@@ -83,7 +83,7 @@ exports.login = async (req, res) => {
       return res.status(403).json({ msg: 'Please verify your email before logging in. Check your inbox.' });
     }
 
-    const token = jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, { expiresIn: '3h' });
+    const token = jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, { expiresIn: '30d' });
 
     res.json({
       token,

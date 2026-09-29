@@ -3,7 +3,7 @@ import moment from "moment-timezone";
 import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import { FaCheck, FaEdit } from "react-icons/fa";
-import "react-datepicker/dist/react-datepicker.css";
+import "react-datepicker/dist/react-datepicker.css"; 
 import Navbar from "../Navbar/Navbar";
 import Icon from "../components/Icon";
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -145,6 +145,7 @@ const VisitsDashboard = () => {
                 <th>Type</th>
                 <th>Date From</th>
                 <th>Date To</th>
+                <th>Registered</th>
                 <th>Total Cost</th>
                 <th>Status</th>
                 <th>Issues</th>
@@ -154,7 +155,7 @@ const VisitsDashboard = () => {
             <tbody>
               {filteredVisits.length === 0 ? (
                 <tr>
-                  <td colSpan={11} className="empty-state">
+                  <td colSpan={12} className="empty-state">
                     No visits available.
                   </td>
                 </tr>
@@ -173,7 +174,8 @@ const VisitsDashboard = () => {
                     <td className={urgent ? "urgent-cell" : ""}>
                       {visit.dateTo ? moment(visit.dateTo).format("MMM D, YYYY") : "-"}
                     </td>
-                    <td className="total-cost">${visit.totalCost?.toFixed(2) || "-"}</td>
+                    <td>{visit.createdAt ? moment(visit.createdAt).format("MMM D, YYYY") : "-"}</td>
+                    <td className="total-cost">{visit.totalCost != null ? `$${visit.totalCost.toFixed(2)}` : "-"}</td>
                     <td>
                       <span className={`status-indicator ${visit.isPaid ? "paid" : "unpaid"}`}>
                         <span className="status-dot"></span>

@@ -30,6 +30,7 @@ export interface Visit {
   isPaid?: boolean;
   arrivalEventLink?: string;
   departureEventLink?: string;
+  createdAt?: string;
 }
 
 export interface VisitFormData {
