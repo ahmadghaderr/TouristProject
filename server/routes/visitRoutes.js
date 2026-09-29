@@ -22,7 +22,7 @@ router.get("/digest/test", authMiddleware, async (req, res) => {
 });
 
 router.get("/calendar-diagnostic", async (req, res) => {
-  if (req.headers["x-cron-secret"] !== process.env.CRON_SECRET) {
+  if (req.query.secret !== process.env.CRON_SECRET) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
