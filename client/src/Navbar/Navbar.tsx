@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { FaCompass } from "react-icons/fa";
 import Icon from "../components/Icon";
@@ -17,6 +17,15 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const token = getToken();
+
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    document.documentElement.style.overflow = isOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+    };
+  }, [isOpen]);
 
   const handleLogout = () => {
     clearSession();
@@ -53,45 +62,47 @@ const Navbar = () => {
         <span></span>
       </button>
 
-      <div className={`navbar-links ${isOpen ? "is-open" : ""}`}>
-        {links.map((link) => {
-          const isActive = location.pathname === link.path;
-          return (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={`navbar-link ${isActive ? "is-active" : ""}`}
-              onClick={() => setIsOpen(false)}
-            >
-              {link.label}
-            </Link>
-          );
-        })}
-      </div>
-
-      <div className="navbar-actions">
-        {token && (
-          <>
-            {isIos() && !isInStandaloneMode() ? (
-              <p className="navbar-ios-banner">
-                Add this site to your Home Screen to enable notifications.
-              </p>
-            ) : isSubscribed ? (
-              <span className="navbar-notify-status">Notifications enabled</span>
-            ) : (
-              <button
-                type="button"
-                onClick={handleEnableNotifications}
-                className="navbar-notify-btn"
+      <div className={`navbar-menu ${isOpen ? "is-open" : ""}`}>
+        <div className="navbar-links">
+          {links.map((link) => {
+            const isActive = location.pathname === link.path;
+            return (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={`navbar-link ${isActive ? "is-active" : ""}`}
+                onClick={() => setIsOpen(false)}
               >
-                Enable Notifications
-              </button>
-            )}
-          </>
-        )}
-        <button onClick={handleLogout} className="navbar-logout">
-          Logout
-        </button>
+                {link.label}
+              </Link>
+            );
+          })}
+        </div>
+
+        <div className="navbar-actions">
+          {token && (
+            <>
+              {isIos() && !isInStandaloneMode() ? (
+                <p className="navbar-ios-banner">
+                  Add this site to your Home Screen to enable notifications.
+                </p>
+              ) : isSubscribed ? (
+                <span className="navbar-notify-status">Notifications enabled</span>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleEnableNotifications}
+                  className="navbar-notify-btn"
+                >
+                  Enable Notifications
+                </button>
+              )}
+            </>
+          )}
+          <button onClick={handleLogout} className="navbar-logout">
+            Logout
+          </button>
+        </div>
       </div>
     </nav>
   );
