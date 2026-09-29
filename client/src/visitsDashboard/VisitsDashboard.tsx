@@ -3,7 +3,7 @@ import moment from "moment-timezone";
 import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import { FaCheck, FaEdit } from "react-icons/fa";
-import "react-datepicker/dist/react-datepicker.css"; 
+import "react-datepicker/dist/react-datepicker.css";
 import Navbar from "../Navbar/Navbar";
 import Icon from "../components/Icon";
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -91,16 +91,16 @@ const VisitsDashboard = () => {
             stats={[
               {
                 label: "Total",
-                value: `$${visits.reduce((sum, v) => sum + (v.totalCost || 0), 0)}`,
+                value: `$${filteredVisits.reduce((sum, v) => sum + (v.totalCost || 0), 0)}`,
               },
               {
                 label: "Paid",
-                value: `$${visits.filter((v) => v.isPaid).reduce((sum, v) => sum + (v.totalCost || 0), 0)}`,
+                value: `$${filteredVisits.filter((v) => v.isPaid).reduce((sum, v) => sum + (v.totalCost || 0), 0)}`,
                 className: "paid",
               },
               {
                 label: "Unpaid",
-                value: `$${visits.filter((v) => !v.isPaid).reduce((sum, v) => sum + (v.totalCost || 0), 0)}`,
+                value: `$${filteredVisits.filter((v) => !v.isPaid).reduce((sum, v) => sum + (v.totalCost || 0), 0)}`,
                 className: "unpaid",
               },
             ]}
@@ -175,7 +175,7 @@ const VisitsDashboard = () => {
                       {visit.dateTo ? moment(visit.dateTo).format("MMM D, YYYY") : "-"}
                     </td>
                     <td>{visit.createdAt ? moment(visit.createdAt).format("MMM D, YYYY") : "-"}</td>
-                    <td className="total-cost">{visit.totalCost != null ? `$${visit.totalCost.toFixed(2)}` : "-"}</td>
+                    <td className="total-cost">${visit.totalCost?.toFixed(2) || "-"}</td>
                     <td>
                       <span className={`status-indicator ${visit.isPaid ? "paid" : "unpaid"}`}>
                         <span className="status-dot"></span>
