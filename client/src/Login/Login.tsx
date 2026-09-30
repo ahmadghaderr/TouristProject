@@ -41,7 +41,7 @@ const Login = () => {
       await apiClient.post("/user/login", formData);
       const user = await refreshUser();
       if (!user) {
-        alert("Logged in, but the session could not be established. Please check that cookies are enabled.");
+        alert("Logged in, but your session could not be confirmed. Please try again.");
         return;
       }
       navigate("/add-visit");
