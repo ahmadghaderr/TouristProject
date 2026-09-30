@@ -1,1 +1,3 @@
+# Proxy API calls to Render so the auth cookie is first-party (must stay above the SPA fallback)
+/api/*  https://YOUR-SERVICE.onrender.com/api/:splat  200!
 /*    /index.html   200

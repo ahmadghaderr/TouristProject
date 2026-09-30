@@ -48,8 +48,9 @@ export interface VisitFormData {
   fullPricePackages: string;
 }
 
-export interface JwtPayload {
+export interface CurrentUser {
   id: string;
-  role?: Role;
-  [key: string]: unknown;
+  name: string;
+  email: string;
+  role: Role;
 }

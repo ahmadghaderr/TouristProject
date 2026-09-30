@@ -6,6 +6,14 @@ const { sendVerificationEmail } = require('../services/emailService');
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+const isProduction = process.env.NODE_ENV === 'production';
+const authCookieOptions = {
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? 'none' : 'lax',
+};
+const AUTH_COOKIE_MAX_AGE = 30 * 24 * 60 * 60 * 1000;
+
 exports.register = async (req, res) => {
   const { name, email, password } = req.body;
   try {
@@ -85,8 +93,9 @@ exports.login = async (req, res) => {
 
     const token = jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, { expiresIn: '30d' });
 
+    res.cookie('token', token, { ...authCookieOptions, maxAge: AUTH_COOKIE_MAX_AGE });
+
     res.json({
-      token,
       user: {
         id: user.id,
         name: user.name,
@@ -96,6 +105,30 @@ exports.login = async (req, res) => {
     });
   } catch (err) {
     console.error('Login error:', err);
+    res.status(500).json({ msg: "Server error" });
+  }
+};
+
+exports.logout = (req, res) => {
+  res.clearCookie('token', authCookieOptions);
+  res.status(200).json({ msg: 'Logged out' });
+};
+
+exports.getMe = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user._id);
+    if (!user) {
+      res.clearCookie('token', authCookieOptions);
+      return res.status(401).json({ msg: 'User no longer exists' });
+    }
+    res.json({
+      id: String(user.id),
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    });
+  } catch (err) {
+    console.error('Get current user error:', err);
     res.status(500).json({ msg: "Server error" });
   }
 };

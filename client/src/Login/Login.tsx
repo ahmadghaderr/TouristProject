@@ -1,13 +1,12 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 import { FaEnvelope } from "react-icons/fa";
 import AuthLayout from "../components/AuthLayout";
 import IconInput from "../components/IconInput";
 import PasswordInput from "../components/PasswordInput";
 import apiClient from "../api/client";
-import { setSession } from "../utils/auth";
+import { useAuth } from "../utils/auth";
 import { getErrorMessage } from "../utils/errors";
-import type { JwtPayload } from "../types";
 import "../Register/Register.css";
 
 interface LoginFormData {
@@ -16,6 +15,9 @@ interface LoginFormData {
 }
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { refreshUser } = useAuth();
+
   useEffect(() => {
     document.body.classList.add("auth-body");
     document.body.classList.remove("add-visit-body");
@@ -36,11 +38,13 @@ const Login = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await apiClient.post("/user/login", formData);
-      const token: string = response.data.token;
-      const decoded = jwtDecode<JwtPayload>(token);
-      setSession(token, decoded.id, decoded.role || "manager");
-      window.location.href = "/add-visit";
+      await apiClient.post("/user/login", formData);
+      const user = await refreshUser();
+      if (!user) {
+        alert("Logged in, but the session could not be established. Please check that cookies are enabled.");
+        return;
+      }
+      navigate("/add-visit");
     } catch (err) {
       alert(getErrorMessage(err, "Login failed. Please check your email and password."));
     }

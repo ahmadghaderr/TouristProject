@@ -7,7 +7,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorMessage from "../components/ErrorMessage";
 import SummaryStats from "../components/SummaryStats";
 import apiClient from "../api/client";
-import { getUserId } from "../utils/auth";
+import { useAuth } from "../utils/auth";
 import type { User } from "../types";
 import "./UsersPage.css";
 
@@ -15,7 +15,8 @@ const UsersPage = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const currentUserId = getUserId();
+  const { user: currentUser } = useAuth();
+  const currentUserId = currentUser?.id;
 
   const fetchUsers = async () => {
     setLoading(true);

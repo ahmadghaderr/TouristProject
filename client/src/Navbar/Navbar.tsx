@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { FaCompass } from "react-icons/fa";
 import Icon from "../components/Icon";
-import { clearSession, getToken, isAdmin } from "../utils/auth";
+import { useAuth } from "../utils/auth";
 import { isInStandaloneMode, isIos, subscribeToPush } from "../utils/pushNotifications";
 import "./Navbar.css";
 
@@ -16,7 +16,7 @@ const Navbar = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
-  const token = getToken();
+  const { isAuthenticated, isAdmin, logout } = useAuth();
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
@@ -27,13 +27,13 @@ const Navbar = () => {
     };
   }, [isOpen]);
 
-  const handleLogout = () => {
-    clearSession();
+  const handleLogout = async () => {
+    await logout();
     navigate("/login");
   };
 
   const handleEnableNotifications = async () => {
-    const success = await subscribeToPush(token);
+    const success = await subscribeToPush();
     if (success) setIsSubscribed(true);
   };
 
@@ -41,7 +41,7 @@ const Navbar = () => {
     { path: "/add-visit", label: "Add Visit" },
     { path: "/edit-user", label: "Edit User" },
     { path: "/visit-dashboard", label: "Visit Dashboard" },
-    ...(isAdmin() ? [{ path: "/users", label: "Users" }] : []),
+    ...(isAdmin ? [{ path: "/users", label: "Users" }] : []),
   ];
 
   return (
@@ -80,7 +80,7 @@ const Navbar = () => {
         </div>
 
         <div className="navbar-actions">
-          {token && (
+          {isAuthenticated && (
             <>
               {isIos() && !isInStandaloneMode() ? (
                 <p className="navbar-ios-banner">

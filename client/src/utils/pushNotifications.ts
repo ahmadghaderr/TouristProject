@@ -17,9 +17,7 @@ export function urlBase64ToUint8Array(base64String: string): Uint8Array {
   return outputArray;
 }
 
-export async function subscribeToPush(token: string | null): Promise<boolean> {
-  if (!token) return false;
-
+export async function subscribeToPush(): Promise<boolean> {
   if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
     return false;
   }
@@ -47,8 +45,7 @@ export async function subscribeToPush(token: string | null): Promise<boolean> {
           p256dh: subscriptionJson.keys?.p256dh,
           auth: subscriptionJson.keys?.auth,
         },
-      },
-      { headers: { Authorization: `Bearer ${token}` } }
+      }
     );
 
     return true;

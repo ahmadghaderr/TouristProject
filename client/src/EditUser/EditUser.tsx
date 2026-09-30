@@ -2,7 +2,7 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
 import apiClient from "../api/client";
-import { clearSession, getUserId } from "../utils/auth";
+import { useAuth } from "../utils/auth";
 import { getErrorMessage } from "../utils/errors";
 import "./editUser.css";
 
@@ -12,7 +12,8 @@ interface UserFormData {
 }
 
 const EditUser = () => {
-  const userId = getUserId();
+  const { user, logout } = useAuth();
+  const userId = user?.id;
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState<UserFormData>({
@@ -62,7 +63,7 @@ const EditUser = () => {
     try {
       await apiClient.delete(`/user/delete/${userId}`);
       setMessage("User deleted successfully!");
-      clearSession();
+      await logout();
       navigate("/login");
     } catch (err) {
       setMessage(getErrorMessage(err, "Error deleting user."));
