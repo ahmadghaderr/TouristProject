@@ -3,15 +3,17 @@ import axios from "axios";
 import apiClient from "../api/client";
 import type { CurrentUser } from "../types";
 
-const RETRY_DELAY_MS = 1500;
+// Render's free tier can take 30-60s to wake; 5 retries 5s apart cover ~25s
+// on top of however long each attempt itself takes.
+const MAX_RETRIES = 5;
+const RETRY_DELAY_MS = 5000;
 
-const isTransientError = (err: unknown): boolean =>
-  axios.isAxiosError(err) && (!err.response || err.response.status >= 500);
+const isUnauthorized = (err: unknown): boolean =>
+  axios.isAxiosError(err) && err.response?.status === 401;
 
 interface AuthContextValue {
   user: CurrentUser | null;
   loading: boolean;
-  authCheckFailed: boolean;
   isAuthenticated: boolean;
   isAdmin: boolean;
   refreshUser: () => Promise<CurrentUser | null>;
@@ -24,35 +26,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<CurrentUser | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const [authCheckFailed, setAuthCheckFailed] = useState(false);
-
-  // Resolves to the confirmed user, or null if the check was rejected (401)
-  // or could not complete. Only a 401 clears the session; network errors and
-  // 5xx (e.g. Render waking from sleep) are retried once, then leave the
-  // current user untouched and set authCheckFailed.
+  // Resolves to the confirmed user, or null. A 401 means "not logged in"
+  // immediately; any other failure is retried, and only once all retries are
+  // exhausted is the user treated as logged out. loading stays true until then.
   const refreshUser = useCallback(async (): Promise<CurrentUser | null> => {
-    const fetchMe = () => apiClient.get<CurrentUser>("/user/me");
     try {
-      let response;
-      try {
-        response = await fetchMe();
-      } catch (err) {
-        if (!isTransientError(err)) throw err;
-        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
-        response = await fetchMe();
+      for (let attempt = 0; ; attempt++) {
+        try {
+          const { data } = await apiClient.get<CurrentUser>("/user/me");
+          setUser(data);
+          return data;
+        } catch (err) {
+          if (isUnauthorized(err)) {
+            setUser(null);
+            return null;
+          }
+          if (attempt >= MAX_RETRIES) {
+            console.error("Auth check failed after retries:", err);
+            setUser(null);
+            return null;
+          }
+          await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
+        }
       }
-      setUser(response.data);
-      setAuthCheckFailed(false);
-      return response.data;
-    } catch (err) {
-      if (axios.isAxiosError(err) && err.response?.status === 401) {
-        setUser(null);
-        setAuthCheckFailed(false);
-      } else {
-        console.error("Auth check failed:", err);
-        setAuthCheckFailed(true);
-      }
-      return null;
     } finally {
       setLoading(false);
     }
@@ -75,7 +71,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const value: AuthContextValue = {
     user,
     loading,
-    authCheckFailed,
     isAuthenticated: user !== null,
     isAdmin: user?.role === "admin",
     refreshUser,

@@ -20,7 +20,7 @@ async function generateAiSummary({ arrivals, departures, fullDayActive }) {
     lines.push(`Full-day active: ${v.name}, ${v.car}`)
   );
 
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-3.8-flash' });
 
   const prompt = `Write a short, plain-language 2-3 sentence overview for a taxi dispatcher's morning briefing, based on today's bookings below. Mention total counts, flag any car conflicts (same car used more than once today), and note anything that needs attention. Do not repeat every individual booking, just give the high-level picture.
 
