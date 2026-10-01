@@ -3,10 +3,11 @@ import axios from "axios";
 import apiClient from "../api/client";
 import type { CurrentUser } from "../types";
 
-// Render's free tier can take 30-60s to wake; 5 retries 5s apart cover ~25s
-// on top of however long each attempt itself takes.
+// Render's free tier can take 30-60s to wake. Each attempt is capped so one
+// hung request can't stall the sequence: worst case is 6 x 10s + 5 x 5s ~= 85s.
 const MAX_RETRIES = 5;
 const RETRY_DELAY_MS = 5000;
+const ATTEMPT_TIMEOUT_MS = 10000;
 
 const isUnauthorized = (err: unknown): boolean =>
   axios.isAxiosError(err) && err.response?.status === 401;
@@ -33,7 +34,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       for (let attempt = 0; ; attempt++) {
         try {
-          const { data } = await apiClient.get<CurrentUser>("/user/me");
+          const { data } = await apiClient.get<CurrentUser>("/user/me", {
+            timeout: ATTEMPT_TIMEOUT_MS,
+          });
           setUser(data);
           return data;
         } catch (err) {
