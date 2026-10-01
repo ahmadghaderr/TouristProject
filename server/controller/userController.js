@@ -94,6 +94,12 @@ exports.login = async (req, res) => {
     const token = jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, { expiresIn: '30d' });
 
     res.cookie('token', token, { ...authCookieOptions, maxAge: AUTH_COOKIE_MAX_AGE });
+    // TEMP-AUTH-DEBUG: remove once cookie auth is confirmed working in production
+    console.log(`[TEMP-AUTH-DEBUG] login cookie set for user ${user.id}:`, {
+      sameSite: authCookieOptions.sameSite,
+      secure: authCookieOptions.secure,
+      httpOnly: authCookieOptions.httpOnly,
+    });
 
     res.json({
       user: {

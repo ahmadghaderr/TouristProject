@@ -2,6 +2,11 @@ const jwt = require('jsonwebtoken');
 
 const authMiddleware = (req, res, next) => {
   const token = req.cookies?.token;
+  // TEMP-AUTH-DEBUG: remove once cookie auth is confirmed working in production
+  console.log(
+    `[TEMP-AUTH-DEBUG] ${req.method} ${req.originalUrl} cookie token:`,
+    token ? `present (${token.slice(0, 15)}...)` : 'MISSING'
+  );
   if (!token) {
     return res.status(401).json({ message: 'No token provided' });
   }
